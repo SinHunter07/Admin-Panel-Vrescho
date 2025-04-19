@@ -11,14 +11,14 @@ export interface User {
 
 export const userService = {
   getUsers: async () => {
-    return api.get(`/admin`)
+    return api.get(`/users/admin`)
   },
   
   blockUser: async (id: string) => {
-    return api.patch(`/admin/${id}/block`)
+    return api.patch(`/users/admin/${id}/block`)
   },
   
   deleteUser: async (id: string) => {
-    return api.delete(`/admin/${id}`)
+    return api.delete(`/users/admin/${id}`)
   }
 }

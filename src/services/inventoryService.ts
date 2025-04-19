@@ -1,16 +1,30 @@
 import { api } from './api'
 
+export interface ProductSize {
+  size: string
+  quantity: number
+}
+
 export interface Product {
   id: string
   name: string
   description: string
   price: number
-  size: number
-  category: string
+  fakePrice?: number
+  category: 'shoes' | 'slippers' | 'sandals' | 'other'
   images: string[]
-  status: 'active' | 'inactive'
+  sizes: ProductSize[]
+  isAvailable: boolean
+  createdBy: string
   createdAt: string
-  inventory?: number 
+  updatedAt: string
+}
+
+export interface ProductsResponse {
+  products: Product[]
+  total: number
+  page: number
+  limit: number
 }
 
 export interface InventoryUpdate {
@@ -19,27 +33,27 @@ export interface InventoryUpdate {
   }
 
 export const inventoryService = {
-  
-  
-  
-  createProduct: async (data: Omit<Product, 'id' | 'createdAt'>) => {
-    return api.post('/admin/add', data)
+  getProducts: async (params?: { page?: number; limit?: number; search?: string }) => {
+    return api.get<ProductsResponse>('/products/', { params })
+  },
+
+  getProductById: async (id: string) => {
+    return api.get<Product>(`/products/${id}`)
+  },
+
+  createProduct: async (data: Omit<Product, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>) => {
+    return api.post<Product>('/products/', data)
+  },
+
+  updateProduct: async (id: string, data: Partial<Omit<Product, 'id' | 'createdBy' | 'createdAt' | 'updatedAt'>>) => {
+    return api.patch<Product>(`/products/${id}`, data)
+  },
+
+  deleteProduct: async (id: string) => {
+    return api.delete(`/products/${id}`)
   },
 
   updateInventory: async (productId: string, data: InventoryUpdate) => {
-    return api.patch(`/admin/${productId}/inventory`, data)
-  },
-  
-
-  updateProduct: async (id: string, data: Partial<Product>) => {
-    return api.patch(`/admin/${id}`, data)
-  },
-  
-  deleteProduct: async (id: string) => {
-    return api.delete(`/admin/${id}`)
+    return api.patch(`/products/admin/${productId}/inventory`, data)
   }
-  
-
-
-  
 }

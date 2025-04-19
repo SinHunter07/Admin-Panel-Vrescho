@@ -16,11 +16,11 @@ export interface Order {
 
 export const orderService = {
   getOrders: async () => {
-    return api.get(`/`)
+    return api.get(`/orders/`)
   },
   
   
   updateOrderStatus: async (id: string, status: Order['status']) => {
-    return api.patch(`/${id}/status`, { status })
+    return api.patch(`/orders/${id}/status`, { status })
   }
 }
